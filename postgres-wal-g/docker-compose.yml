@@ -1,0 +1,40 @@
+
+version: '3'
+
+services:
+
+   s3:
+      image: minio/minio
+      container_name: wal-g_s3
+      ports:
+        - "9000:9000"
+      environment:
+        - "MINIO_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE"
+        - "MINIO_SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+      entrypoint: sh
+      command: >
+        -c 'mkdir -p /export/fullbucket
+        &&  /usr/bin/minio server /export'
+   pg:
+     build:
+       dockerfile: ./Dockerfile
+       context: .
+     image: apkawa/postgres-10-wal-g
+     depends_on:
+       - s3
+     links:
+       - s3
+     environment:
+       AWS_ACCESS_KEY_ID: AKIAIOSFODNN7EXAMPLE
+       AWS_SECRET_ACCESS_KEY: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+       AWS_ENDPOINT: http://s3:9000
+       AWS_S3_FORCE_PATH_STYLE: 'true'
+       WALG_COMPRESSION_METHOD: brotli
+       WALG_DELTA_MAX_STEPS: 6
+       WALG_UPLOAD_CONCURRENCY: 10
+       WALE_S3_PREFIX: s3://fullbucket
+       PGHOST: /var/run/postgresql
+
+       PGSSLMODE: allow
+       PGDATABASE: postgres
+
