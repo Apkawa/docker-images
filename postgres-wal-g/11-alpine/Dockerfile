@@ -1,4 +1,5 @@
 FROM postgres:11.4-alpine
+MAINTAINER apkawa <apkawa@gmail.com>
 
 COPY --from=apkawa/wal-g:alpine /usr/local/bin/wal-g /usr/local/bin/wal-g
 

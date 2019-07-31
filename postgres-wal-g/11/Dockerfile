@@ -1,4 +1,5 @@
 FROM postgres:11.4
+MAINTAINER apkawa <apkawa@gmail.com>
 
 COPY --from=apkawa/wal-g:latest /wal-g /usr/local/bin/wal-g
 

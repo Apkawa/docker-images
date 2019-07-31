@@ -1,4 +1,5 @@
 FROM golang:1.12.7-alpine AS builder
+MAINTAINER apkawa <apkawa@gmail.com>
 
 ENV WALG_VERSION=v0.2.10
 

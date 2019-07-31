@@ -1,4 +1,5 @@
 FROM python:3.6-alpine
+MAINTAINER apkawa <apkawa@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DUMB_INIT_VERSION 1.0.1
