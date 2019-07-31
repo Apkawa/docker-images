@@ -2,7 +2,7 @@ FROM golang:1.12.7-alpine AS builder
 
 ENV WALG_VERSION=v0.2.10
 
-ENV _build_deps="wget cmake git build-base"
+ENV _build_deps="wget cmake git build-base bash"
 
 RUN set -ex  \
      && apk add --no-cache $_build_deps \
