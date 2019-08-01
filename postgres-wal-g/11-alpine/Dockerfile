@@ -1,7 +1,7 @@
 FROM postgres:11.4-alpine
 MAINTAINER apkawa <apkawa@gmail.com>
 
-COPY --from=apkawa/wal-g:alpine /usr/local/bin/wal-g /usr/local/bin/wal-g
+COPY --from=apkawa/wal-g:alpine /wal-g /usr/local/bin/wal-g
 
 COPY dump.sh /usr/local/bin/dump.sh
 COPY load.sh /usr/local/bin/load.sh
