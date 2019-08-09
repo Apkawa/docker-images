@@ -25,14 +25,16 @@ services:
      links:
        - s3
      environment:
+       WALG_COMPRESSION_METHOD: brotli
+       WALG_DELTA_MAX_STEPS: 6
+       WALG_UPLOAD_CONCURRENCY: 10
+       # S3
        AWS_ACCESS_KEY_ID: AKIAIOSFODNN7EXAMPLE
        AWS_SECRET_ACCESS_KEY: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
        AWS_ENDPOINT: http://s3:9000
        AWS_S3_FORCE_PATH_STYLE: 'true'
-       WALG_COMPRESSION_METHOD: brotli
-       WALG_DELTA_MAX_STEPS: 6
-       WALG_UPLOAD_CONCURRENCY: 10
        WALE_S3_PREFIX: s3://fullbucket
+
        PGHOST: /var/run/postgresql
 
        PGSSLMODE: allow

@@ -10,7 +10,8 @@ COPY --chown=postgres:postgres restore.sh /usr/local/bin/restore.sh
 
 
 RUN set -x \
-    # make the sample config easier to munge (and "correct by default")
+    # For working with https
+    && apk add --no-cache ca-certificates \
     && export CONF_SAMPLE=/usr/local/share/postgresql/postgresql.conf.sample \
     && echo "wal_level=replica" >> $CONF_SAMPLE \
     && echo "archive_mode=on" >> $CONF_SAMPLE \

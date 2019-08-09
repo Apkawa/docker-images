@@ -62,7 +62,7 @@ AWS User creds used must at least have these permissions
 
 
 ```
-docker run --env-file [your env file] apkawa/postgres-10-wal-g dump.sh [a
+docker run --env-file [your env file] apkawa/postgres-10-wal-g dump.sh
 ```
 
 ## Load
