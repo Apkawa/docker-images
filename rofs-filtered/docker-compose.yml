@@ -1,0 +1,48 @@
+
+version: '3.3'
+
+services:
+   rofs-filtered:
+      build:
+        dockerfile: ./Dockerfile
+        context: .
+      image: apkawa/rofs-filtered
+      container_name: rofs-filtered
+      # required
+      privileged: true
+      cap_add:
+        - SYS_ADMIN
+      devices:
+        - /dev/fuse
+      command: >
+        -o source=/container_dir_readonly
+        -o config=/filter_rules.rc
+        -f
+        /container_dir_filtered_files/
+
+      volumes:
+        # From filtered
+        - type: bind
+          source: /tmp/rofs/host_dir_with_files
+          target: /container_dir_readonly
+          read_only: true
+          bind:
+            propagation: shared
+        # to filtered
+        - type: bind
+          source: /tmp/rofs/host_dir_for_filtered_files
+          target: /container_dir_filtered_files
+          read_only: false
+          bind:
+            propagation: shared
+        - /tmp/rofs/host_dir_filter_rules.rc:/filter_rules.rc:ro
+
+   example:
+     image: mohamnag/nginx-file-browser
+     ports:
+       - 19091:80
+     depends_on:
+       - rofs-filtered
+     volumes:
+       # mount filtered files
+       - /tmp/rofs/host_dir_for_filtered_files:/opt/www/files/:ro,shared
