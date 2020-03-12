@@ -12,6 +12,8 @@ docker run --rm -it \
     apkawa/rofs-filtered  \
         -o source=/container_dir_readonly  \
         -o config=/filter_rules.rc \
+        -o umask=0022 \ 
+        -o allow_other \
         -f \
         /container_dir_filtered_files/
 ```
@@ -41,6 +43,8 @@ services:
       command: >
         -o source=/container_dir_readonly
         -o config=/filter_rules.rc
+        -o umask=0022
+        -o allow_other
         -f
         /container_dir_filtered_files/
 
@@ -51,14 +55,14 @@ services:
           target: /container_dir_readonly
           read_only: true
           bind:
-            propagation: shared
+            propagation: rshared
         # to filtered
         - type: bind
           source: /tmp/rofs/host_dir_for_filtered_files
           target: /container_dir_filtered_files
           read_only: false
           bind:
-            propagation: shared
+            propagation: rshared
         - /tmp/rofs/host_dir_filter_rules.rc:/filter_rules.rc:ro
 
    example:
@@ -69,5 +73,11 @@ services:
        - rofs-filtered
      volumes:
        # mount filtered files
-       - /tmp/rofs/host_dir_for_filtered_files:/opt/www/files/:ro,shared
+       - /tmp/rofs/host_dir_for_filtered_files:/opt/www/files/:ro,rslave
 ```
+
+**Important note:** 
+
+* keep `-f` flag in command for foreground*
+* Keep `-o allow_other` for rootless container
+* Tune `-o umask=0022` for right file permissions

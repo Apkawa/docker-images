@@ -14,11 +14,17 @@ services:
         - SYS_ADMIN
       devices:
         - /dev/fuse
+      security_opt:
+        - apparmor:unconfined
       command: >
         -o source=/container_dir_readonly
         -o config=/filter_rules.rc
+        -o umask=0022
+        -o allow_other
         -f
         /container_dir_filtered_files/
+
+      stop_grace_period: 10s
 
       volumes:
         # From filtered
@@ -27,15 +33,15 @@ services:
           target: /container_dir_readonly
           read_only: true
           bind:
-            propagation: shared
+            propagation: rshared
         # to filtered
         - type: bind
           source: /tmp/rofs/host_dir_for_filtered_files
           target: /container_dir_filtered_files
           read_only: false
           bind:
-            propagation: shared
-        - /tmp/rofs/host_dir_filter_rules.rc:/filter_rules.rc:ro
+            propagation: rshared
+        - ./filter_rules.rc:/filter_rules.rc:ro
 
    example:
      image: mohamnag/nginx-file-browser
@@ -45,4 +51,4 @@ services:
        - rofs-filtered
      volumes:
        # mount filtered files
-       - /tmp/rofs/host_dir_for_filtered_files:/opt/www/files/:ro,shared
+       - /tmp/rofs/host_dir_for_filtered_files:/opt/www/files/:ro,slave
